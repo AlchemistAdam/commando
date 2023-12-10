@@ -89,7 +89,7 @@ public class CommandInfo {
         // else create new instance
         try {
             if (StaticCommand.class.isAssignableFrom(cls)) {
-                Method m = cls.getMethod("instance");
+                Method m = cls.getMethod("getInstance");
                 if (!Modifier.isStatic(m.getModifiers())) {
                     throw new CommandException("missing static instance method for " + cls);
                 }
