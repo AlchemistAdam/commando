@@ -3,12 +3,14 @@ package dk.martinu.commando;
 import org.jetbrains.annotations.*;
 
 import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
 import java.util.*;
 
 public abstract class AbstractCliEngine extends Thread {
 
     private final Scanner scanner;
     private final HashMap<String, CommandInfo> cmdMap = new HashMap<>();
+    private WeakReference<List<CommandInfo>> commands = new WeakReference<>(null);
 
     public AbstractCliEngine(@NotNull Scanner scanner, boolean daemon) {
         this.scanner = Objects.requireNonNull(scanner, "scanner is null");
@@ -16,16 +18,50 @@ public abstract class AbstractCliEngine extends Thread {
         new PrintWriter(System.out);
     }
 
+    public void addCommand(@NotNull CommandInfo commandInfo) {
+        Objects.requireNonNull(commandInfo, "commandInfo is null");
+        synchronized (cmdMap) {
+            cmdMap.put(commandInfo.getName(), commandInfo);
+            commands.clear();
+        }
+    }
+
+    @NotNull
+    public List<CommandInfo> getCommands() {
+        synchronized (cmdMap) {
+            List<CommandInfo> list = commands.get();
+            if (list == null) {
+                // TODO sort commands
+                list = List.copyOf(cmdMap.values());
+                commands = new WeakReference<>(list);
+            }
+            return list;
+        }
+    }
+
     public void printf(@NotNull String format, Object... args) {
         out().printf(format, args).println();
         out().flush();
+    }
+
+    @Nullable
+    public CommandInfo removeCommand(@NotNull String name) {
+        Objects.requireNonNull(name, "name is null");
+        synchronized (cmdMap) {
+            CommandInfo rv = cmdMap.remove(name.toLowerCase(Locale.ROOT));
+            commands.clear();
+            return rv;
+        }
     }
 
     @Override
     public void run() {
         CommandLine cmdl;
         while ((cmdl = getLine()) != null) {
-            CommandInfo cmdInfo = cmdMap.get(cmdl.name);
+            CommandInfo cmdInfo;
+            synchronized (cmdMap) {
+                cmdInfo = cmdMap.get(cmdl.name);
+            }
             if (cmdInfo != null) {
                 try {
                     Parameters p = Parameters.from(cmdl.args);
