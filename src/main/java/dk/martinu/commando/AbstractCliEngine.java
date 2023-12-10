@@ -1,5 +1,6 @@
 package dk.martinu.commando;
 
+import dk.martinu.commando.cmd.*;
 import org.jetbrains.annotations.*;
 
 import java.io.PrintWriter;
@@ -15,7 +16,7 @@ public abstract class AbstractCliEngine extends Thread {
     public AbstractCliEngine(@NotNull Scanner scanner, boolean daemon) {
         this.scanner = Objects.requireNonNull(scanner, "scanner is null");
         setDaemon(daemon);
-        new PrintWriter(System.out);
+        initCmdMap();
     }
 
     public void addCommand(@NotNull CommandInfo commandInfo) {
@@ -86,6 +87,12 @@ public abstract class AbstractCliEngine extends Thread {
     }
 
     protected abstract void freeResources();
+
+    protected void initCmdMap() {
+        addCommand(ListCmd.getInfo());
+        addCommand(HelpCmd.getInfo());
+        addCommand(ExitCmd.getInfo());
+    }
 
     @NotNull
     protected abstract PrintWriter out();
