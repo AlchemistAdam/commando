@@ -11,7 +11,8 @@ public class ExitCmd implements StaticCommand {
     @Contract(value = "-> new", pure = true)
     @NotNull
     public static CommandInfo getInfo() {
-        return new CommandInfo(ExitCmd.class, "exit");
+        // TODO create info
+        return null;
     }
 
     @NotNull
