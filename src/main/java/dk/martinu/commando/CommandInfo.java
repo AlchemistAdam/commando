@@ -18,6 +18,10 @@ public class CommandInfo {
     public final Set<OptionInfo> options;
     private WeakReference<Command> ref = new WeakReference<>(null);
 
+    public CommandInfo(@NotNull Class<? extends Command> cls, @NotNull String... aliases) {
+        this(cls, aliases, new OptionInfo[0]);
+    }
+
     public CommandInfo(@NotNull Class<? extends Command> cls, @NotNull String[] aliases,
             @NotNull OptionInfo[] options) {
         this.cls = Objects.requireNonNull(cls, "cls is null");
@@ -30,7 +34,7 @@ public class CommandInfo {
             this.aliases = Set.of(aliases);
         }
         catch (NullPointerException e) {
-            throw new NullPointerException("aliases array contains null element");
+            throw new NullPointerException("aliases array contains null elements");
         }
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("duplicate alias", e);
@@ -46,7 +50,7 @@ public class CommandInfo {
             this.options = Set.of(options);
         }
         catch (NullPointerException e) {
-            throw new NullPointerException("options array contains null element");
+            throw new NullPointerException("options array contains null elements");
         }
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("duplicate option", e);
