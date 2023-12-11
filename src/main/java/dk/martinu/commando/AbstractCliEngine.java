@@ -22,6 +22,7 @@ public abstract class AbstractCliEngine extends Thread {
     public void addCommand(@NotNull CommandInfo commandInfo) {
         Objects.requireNonNull(commandInfo, "commandInfo is null");
         synchronized (cmdMap) {
+            // TODO add command aliases
             cmdMap.put(commandInfo.getName(), commandInfo);
             commands.clear();
         }
@@ -55,6 +56,9 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
+    // FIXME sometime default commands are not recognized
+    //  replicate: execute 'foo', then 'help' or 'h'
+    //  might be tied to aliases not being added if alias stream is out of order
     @Override
     public void run() {
         CommandLine cmdl;
@@ -66,6 +70,7 @@ public abstract class AbstractCliEngine extends Thread {
             if (cmdInfo != null) {
                 try {
                     Parameters p = Parameters.from(cmdl.args);
+                    // FIXME value options lost first char
                     cmdInfo.resolveOptions(p.options);
                     cmdInfo.getCommand().execute(this, p);
                 }
