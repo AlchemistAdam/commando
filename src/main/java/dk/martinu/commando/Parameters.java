@@ -40,6 +40,7 @@ public class Parameters {
         this.args = "";
     }
 
+    // TODO option index used in exception messages is probably incorrect
     @Contract(value = "_ -> new", pure = true)
     @NotNull
     private Options getOptions(@NotNull String args) throws OptionException {
