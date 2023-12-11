@@ -11,8 +11,8 @@ public class HelpCmd implements StaticCommand {
     @Contract(value = "-> new", pure = true)
     @NotNull
     public static CommandInfo getInfo() {
-        // TODO create info
-        return null;
+        // TODO add optionInfo
+        return new CommandInfo(HelpCmd.class, "help", "h");
     }
 
     @NotNull

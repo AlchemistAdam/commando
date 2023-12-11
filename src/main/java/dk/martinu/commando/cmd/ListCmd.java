@@ -11,8 +11,8 @@ public class ListCmd implements StaticCommand {
     @Contract(value = "-> new", pure = true)
     @NotNull
     public static CommandInfo getInfo() {
-        // TODO create info
-        return null;
+        // TODO add optionInfo
+        return new CommandInfo(ListCmd.class, "list", "l");
     }
 
     @NotNull
