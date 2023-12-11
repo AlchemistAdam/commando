@@ -118,7 +118,7 @@ public abstract class AbstractCliEngine extends Thread {
     private synchronized CommandLine getLine() {
         try {
             if (scanner.hasNextLine()) {
-                return CommandLine.from(scanner.nextLine());
+                return CommandLine.from(scanner.nextLine().trim());
             }
         }
         catch (IllegalStateException ignore) { }
@@ -130,12 +130,11 @@ public abstract class AbstractCliEngine extends Thread {
         @Contract(value = "_ -> new", pure = true)
         static CommandLine from(@NotNull String line) {
             int index = line.indexOf(' ');
-            String args;
-            if (index == -1 || (args = line.substring(index + 1).trim()).isEmpty()) {
+            if (index == -1) {
                 return new CommandLine(line);
             }
             else {
-                return new CommandLine(line.substring(0, index), args);
+                return new CommandLine(line.substring(0, index), line.substring(index + 1));
             }
         }
 
