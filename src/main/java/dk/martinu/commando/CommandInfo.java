@@ -31,7 +31,7 @@ public class CommandInfo {
             throw new IllegalArgumentException("aliases array is empty");
         }
         try {
-            this.aliases = Set.of(aliases);
+            this.aliases = OrderedSet.of(aliases);
         }
         catch (NullPointerException e) {
             throw new NullPointerException("aliases array contains null elements");
@@ -47,7 +47,7 @@ public class CommandInfo {
 
         Objects.requireNonNull(options, "options array is null");
         try {
-            this.options = Set.of(options);
+            this.options = OrderedSet.of(options);
         }
         catch (NullPointerException e) {
             throw new NullPointerException("options array contains null elements");
