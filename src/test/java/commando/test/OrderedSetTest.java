@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +46,15 @@ public class OrderedSetTest {
     public void containsAll(Integer[] source) {
         OrderedSet<Integer> set = OrderedSet.of(source);
         assertTrue(set.containsAll(List.of(source)));
+    }
+
+    @DisplayName("forEach method is ordered")
+    @ParameterizedTest
+    @MethodSource("distinctIntsProvider")
+    public void forEach(Integer[] source) {
+        OrderedSet<Integer> set = OrderedSet.of(source);
+        AtomicInteger index = new AtomicInteger(0);
+        set.forEach(val -> assertEquals(source[index.getAndIncrement()], val));
     }
 
     @DisplayName("set has same order as source array")
