@@ -56,9 +56,6 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
-    // FIXME sometime default commands are not recognized
-    //  replicate: execute 'foo', then 'help' or 'h'
-    //  might be tied to aliases not being added if alias stream is out of order
     @Override
     public void run() {
         CommandLine cmdl;
