@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class CommandInfo {
+public class CommandInfo implements Comparable<CommandInfo> {
 
     @NotNull
     public final Class<? extends Command> cls;
@@ -55,6 +55,13 @@ public class CommandInfo {
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("duplicate option", e);
         }
+    }
+
+    @Contract(pure = true)
+    @Override
+    public int compareTo(@NotNull CommandInfo commandInfo) {
+        Objects.requireNonNull(commandInfo, "commandInfo is null");
+        return getName().compareTo(commandInfo.getName());
     }
 
     @NotNull
