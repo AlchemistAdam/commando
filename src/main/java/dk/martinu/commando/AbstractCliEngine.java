@@ -22,7 +22,12 @@ public abstract class AbstractCliEngine extends Thread {
     public void addCommand(@NotNull CommandInfo commandInfo) {
         Objects.requireNonNull(commandInfo, "commandInfo is null");
         synchronized (cmdMap) {
-            commandInfo.aliases.forEach(alias -> cmdMap.put(alias, commandInfo));
+            commandInfo.aliases.forEach(alias -> {
+                CommandInfo prev = cmdMap.put(alias, commandInfo);
+                if (prev != null && !prev.cls.equals(commandInfo.cls)) {
+                    // TODO log warning or throw when alias is replaced
+                }
+            });
             commands.clear();
         }
     }
