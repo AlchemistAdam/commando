@@ -64,13 +64,13 @@ public class CommandInfo implements Comparable<CommandInfo> {
         return getName().compareTo(commandInfo.getName());
     }
 
+    @Contract(pure = true)
     @NotNull
     public String getName() {
         //noinspection OptionalGetWithoutIsPresent
         return aliases.stream().findFirst().get().toLowerCase(Locale.ROOT);
     }
 
-    @Contract(pure = true)
     public void resolveOptions(@NotNull Collection<Option> options) throws CommandException, OptionException {
         Objects.requireNonNull(options, "options is null");
         for (Option option : options) {
