@@ -68,7 +68,7 @@ public abstract class AbstractCliEngine extends Thread {
         while ((cmdl = getLine()) != null) {
             CommandInfo cmdInfo;
             synchronized (cmdMap) {
-                cmdInfo = cmdMap.get(cmdl.name);
+                cmdInfo = cmdMap.get(cmdl.name.toLowerCase(Locale.ROOT));
             }
             if (cmdInfo != null) {
                 try {
