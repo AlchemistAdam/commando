@@ -143,31 +143,18 @@ public abstract class AbstractCliEngine extends Thread {
         return null;
     }
 
-    private static final class CommandLine {
+    private record CommandLine(@NotNull String name, @Nullable String args) {
 
         @Contract(value = "_ -> new", pure = true)
+        @NotNull
         static CommandLine from(@NotNull String line) {
             int index = line.indexOf(' ');
             if (index == -1) {
-                return new CommandLine(line);
+                return new CommandLine(line, null);
             }
             else {
                 return new CommandLine(line.substring(0, index), line.substring(index + 1));
             }
-        }
-
-        @NotNull
-        final String name;
-        @Nullable
-        final String args;
-
-        public CommandLine(@NotNull String name) {
-            this(name, null);
-        }
-
-        public CommandLine(@NotNull String name, @Nullable String args) {
-            this.name = name;
-            this.args = args;
         }
     }
 }
