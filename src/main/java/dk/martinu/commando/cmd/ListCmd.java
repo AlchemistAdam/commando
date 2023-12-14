@@ -4,6 +4,9 @@ import dk.martinu.commando.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 public class ListCmd implements StaticCommand {
 
     private static volatile ListCmd instance = null;
@@ -29,7 +32,14 @@ public class ListCmd implements StaticCommand {
 
     @Override
     public void execute(@NotNull AbstractCliEngine engine, @NotNull Parameters parameters) throws CommandException {
-        // TODO list all commands from engine
-        // TODO filter commands to start with params arg if present
+        List<CommandEntry> entries = engine.getCommandEntries();
+        if (!parameters.args.isEmpty()) {
+            // TODO filter commands to start with params arg if present
+        }
+        StringJoiner joiner = new StringJoiner("\n");
+        for (CommandEntry entry : entries) {
+            joiner.add(entry.alias());
+        }
+        engine.println(joiner.toString());
     }
 }
