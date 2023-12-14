@@ -105,7 +105,7 @@ public abstract class AbstractCliEngine extends Thread {
         freeResources();
     }
 
-    public synchronized void stopEngine() {
+    public void stopEngine() {
         scanner.close();
     }
 
@@ -133,7 +133,7 @@ public abstract class AbstractCliEngine extends Thread {
     }
 
     @Nullable
-    private synchronized CommandLine getLine() {
+    private CommandLine getLine() {
         try {
             if (scanner.hasNextLine()) {
                 return CommandLine.from(scanner.nextLine().trim());
