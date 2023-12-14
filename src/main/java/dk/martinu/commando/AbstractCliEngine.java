@@ -12,7 +12,7 @@ public abstract class AbstractCliEngine extends Thread {
 
     private final Scanner scanner;
     private final HashMap<String, CommandInfo> cmdMap = new HashMap<>();
-    private WeakReference<List<CommandInfo>> commands = new WeakReference<>(null);
+    private WeakReference<List<CommandEntry>> commands = new WeakReference<>(null);
 
     public AbstractCliEngine(@NotNull Scanner scanner, boolean daemon) {
         this.scanner = Objects.requireNonNull(scanner, "scanner is null");
@@ -33,14 +33,18 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
+    @Unmodifiable
     @NotNull
-    public List<CommandInfo> getCommands() {
+    public List<CommandEntry> getCommandEntries() {
         synchronized (cmdMap) {
-            List<CommandInfo> list = commands.get();
+            List<CommandEntry> list = commands.get();
             if (list == null) {
                 // TESTME with ListCmd
                 //noinspection SimplifyStreamApiCallChains
-                list = cmdMap.values().stream().sorted().collect(Collectors.toUnmodifiableList());
+                list = cmdMap.entrySet().stream()
+                        .map(entry -> new CommandEntry(entry.getKey(), entry.getValue()))
+                        .sorted()
+                        .collect(Collectors.toUnmodifiableList());
                 commands = new WeakReference<>(list);
             }
             return list;
