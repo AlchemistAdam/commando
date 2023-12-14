@@ -55,6 +55,14 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
+    public void println(@NotNull String s) {
+        PrintWriter out = out();
+        synchronized (out) {
+            out().println(s);
+            out().flush();
+        }
+    }
+
     @Nullable
     public CommandInfo removeCommand(@NotNull String name) {
         Objects.requireNonNull(name, "name is null");
