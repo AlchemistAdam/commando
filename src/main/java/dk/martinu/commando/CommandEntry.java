@@ -8,6 +8,6 @@ public record CommandEntry(String alias, CommandInfo commandInfo) implements Com
     @Contract(pure = true)
     @Override
     public int compareTo(@NotNull CommandEntry commandEntry) {
-        return commandInfo.compareTo(commandEntry.commandInfo);
+        return alias.compareTo(commandEntry.alias);
     }
 }
