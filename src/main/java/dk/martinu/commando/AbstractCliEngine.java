@@ -6,6 +6,7 @@ import org.jetbrains.annotations.*;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractCliEngine extends Thread {
 
@@ -37,8 +38,9 @@ public abstract class AbstractCliEngine extends Thread {
         synchronized (cmdMap) {
             List<CommandInfo> list = commands.get();
             if (list == null) {
-                // TODO sort commands
-                list = List.copyOf(cmdMap.values());
+                // TESTME with ListCmd
+                //noinspection SimplifyStreamApiCallChains
+                list = cmdMap.values().stream().sorted().collect(Collectors.toUnmodifiableList());
                 commands = new WeakReference<>(list);
             }
             return list;
