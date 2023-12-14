@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class CommandInfo implements Comparable<CommandInfo> {
+public class CommandInfo {
 
     @NotNull
     public final Class<? extends Command> cls;
@@ -57,11 +57,11 @@ public class CommandInfo implements Comparable<CommandInfo> {
         }
     }
 
-    @Contract(pure = true)
-    @Override
-    public int compareTo(@NotNull CommandInfo commandInfo) {
-        Objects.requireNonNull(commandInfo, "commandInfo is null");
-        return getName().compareTo(commandInfo.getName());
+    private CommandInfo(@NotNull Class<? extends Command> cls, @NotNull Set<String> aliases,
+            @NotNull Set<OptionInfo> options) {
+        this.cls = cls;
+        this.aliases = aliases;
+        this.options = options;
     }
 
     @Contract(pure = true)
@@ -123,5 +123,67 @@ public class CommandInfo implements Comparable<CommandInfo> {
         }
 
         return cmd;
+    }
+
+    public static final class Builder {
+
+        private Class<? extends Command> cls;
+        @Unmodifiable
+        private Set<String> aliases;
+        @Unmodifiable
+        private Set<OptionInfo> options = Set.of();
+
+        @Contract(value = "-> new", pure = true)
+        @NotNull
+        public CommandInfo get() {
+            return new CommandInfo(cls, aliases, options);
+        }
+
+        @Contract(value = "_ -> this")
+        @NotNull
+        public Builder setAliases(@NotNull String... aliases) {
+            Objects.requireNonNull(aliases, "aliases array is null");
+            if (aliases.length == 0) {
+                throw new IllegalArgumentException("aliases array is empty");
+            }
+            try {
+                this.aliases = Set.of(aliases);
+            }
+            catch (NullPointerException e) {
+                throw new NullPointerException("aliases array contains null elements");
+            }
+            catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("duplicate alias", e);
+            }
+            for (String alias : this.aliases) {
+                if (Util.isNameInvalid(alias)) {
+                    throw new IllegalArgumentException("alias is invalid {" + alias + "}");
+                }
+            }
+            return this;
+        }
+
+        @Contract(value = "_ -> this")
+        @NotNull
+        public Builder setCls(@NotNull Class<? extends Command> cls) {
+            this.cls = Objects.requireNonNull(cls, "cls is null");
+            return this;
+        }
+
+        @Contract(value = "_ -> this")
+        @NotNull
+        public Builder setOptions(@NotNull OptionInfo... options) {
+            Objects.requireNonNull(options, "options array is null");
+            try {
+                this.options = Set.of(options);
+            }
+            catch (NullPointerException e) {
+                throw new NullPointerException("options array contains null elements");
+            }
+            catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("duplicate option", e);
+            }
+            return this;
+        }
     }
 }
