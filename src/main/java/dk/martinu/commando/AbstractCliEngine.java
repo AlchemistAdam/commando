@@ -48,8 +48,11 @@ public abstract class AbstractCliEngine extends Thread {
     }
 
     public void printf(@NotNull String format, Object... args) {
-        out().printf(format, args).println();
-        out().flush();
+        PrintWriter out = out();
+        synchronized (out) {
+            out().printf(format, args).println();
+            out().flush();
+        }
     }
 
     @Nullable
