@@ -156,5 +156,10 @@ public abstract class AbstractCliEngine extends Thread {
                 return new CommandLine(line.substring(0, index), line.substring(index + 1));
             }
         }
+
+        public CommandLine(@NotNull String name, @Nullable String args) {
+            this.name = Objects.requireNonNull(name, "name is null");
+            this.args = args;
+        }
     }
 }
