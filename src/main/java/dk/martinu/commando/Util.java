@@ -19,7 +19,7 @@ class Util {
      * {@code false}
      */
     @Contract(pure = true)
-    public static boolean isDigit(char c) {
+    static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
@@ -36,7 +36,7 @@ class Util {
      * {@code false}
      */
     @Contract(pure = true)
-    public static boolean isHexDigit(char c) {
+    static boolean isHexDigit(char c) {
         if (isDigit(c)) {
             return true;
         }
@@ -49,7 +49,7 @@ class Util {
     }
 
     @Contract(pure = true)
-    public static boolean isNameInvalid(@NotNull String name) {
+    static boolean isNameInvalid(@NotNull String name) {
         Objects.requireNonNull(name, "name is null");
         if (name.isEmpty()) {
             return true;
@@ -72,7 +72,7 @@ class Util {
      * @return an unescaped array
      */
     @Contract(value = "null -> fail", pure = true)
-    public static char[] unescape(char[] chars) {
+    static char[] unescape(char[] chars) {
         return unescape(chars, 0, chars.length);
     }
 
@@ -87,7 +87,7 @@ class Util {
      * @return an unescaped array of characters
      */
     @Contract(value = "null, _, _ -> fail", pure = true)
-    public static char[] unescape(char[] chars, int start, int end) {
+    static char[] unescape(char[] chars, int start, int end) {
         CharBuffer buffer = new CharBuffer(end - start);
         for (int i = start; i < end; ) {
 
