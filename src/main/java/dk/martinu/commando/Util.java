@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-class Util {
+public class Util {
 
     /**
      * Returns {@code true} if the specified character {@code c} is a decimal
@@ -19,7 +19,7 @@ class Util {
      * {@code false}
      */
     @Contract(pure = true)
-    static boolean isDigit(char c) {
+    public static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
@@ -36,7 +36,7 @@ class Util {
      * {@code false}
      */
     @Contract(pure = true)
-    static boolean isHexDigit(char c) {
+    public static boolean isHexDigit(char c) {
         if (isDigit(c)) {
             return true;
         }
@@ -49,7 +49,7 @@ class Util {
     }
 
     @Contract(pure = true)
-    static boolean isNameInvalid(@NotNull String name) {
+    public static boolean isNameInvalid(@NotNull String name) {
         Objects.requireNonNull(name, "name is null");
         if (name.isEmpty()) {
             return true;
@@ -72,7 +72,7 @@ class Util {
      * @return an unescaped array
      */
     @Contract(value = "null -> fail", pure = true)
-    static char[] unescape(char[] chars) {
+    public static char[] unescape(char[] chars) {
         return unescape(chars, 0, chars.length);
     }
 
@@ -87,7 +87,7 @@ class Util {
      * @return an unescaped array of characters
      */
     @Contract(value = "null, _, _ -> fail", pure = true)
-    static char[] unescape(char[] chars, int start, int end) {
+    public static char[] unescape(char[] chars, int start, int end) {
         CharBuffer buffer = new CharBuffer(end - start);
         for (int i = start; i < end; ) {
 
@@ -156,6 +156,46 @@ class Util {
         }
         else {
             return chars;
+        }
+    }
+
+    public static boolean wildcardMatch(@NotNull String pattern, @NotNull String str) {
+        Objects.requireNonNull(pattern, "pattern is null");
+        Objects.requireNonNull(str, "str is null");
+        if (pattern.isEmpty()) {
+            return true;
+        }
+
+        int patternLen = pattern.length();
+        int strLen = str.length();
+
+        if (patternLen > strLen) {
+            return false;
+        }
+        else if (patternLen == strLen) {
+            return pattern.equalsIgnoreCase(str);
+        }
+        else {
+            if (patternLen == 1) {
+                return str.indexOf(pattern.codePointAt(0)) != -1;
+            }
+            else {
+                int patternIndex = 0;
+                int codePoint = pattern.codePointAt(patternIndex);
+                for (int strIndex = 0; strIndex < strLen && (strLen - strIndex) >= (patternLen - patternIndex); strIndex++) {
+                    strIndex = str.indexOf(codePoint, strIndex);
+                    if (strIndex == -1) {
+                        break;
+                    }
+
+                    patternIndex++;
+                    if (patternIndex >= patternLen) {
+                        break;
+                    }
+                    codePoint = pattern.codePointAt(patternIndex);
+                }
+                return patternIndex == patternLen;
+            }
         }
     }
 
