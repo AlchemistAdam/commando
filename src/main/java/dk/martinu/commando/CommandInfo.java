@@ -137,7 +137,7 @@ public class CommandInfo {
         @Unmodifiable
         private Set<String> aliases;
         @Unmodifiable
-        private Set<OptionInfo> options = Set.of();
+        private Set<OptionInfo> options = OrderedSet.of(new OptionInfo[0]);
         private ArgsInfo argsInfo = ArgsInfo.NONE;
 
         @Contract(value = "-> new", pure = true)
@@ -154,7 +154,7 @@ public class CommandInfo {
                 throw new IllegalArgumentException("aliases array is empty");
             }
             try {
-                this.aliases = Set.of(aliases);
+                this.aliases = OrderedSet.of(aliases);
             }
             catch (NullPointerException e) {
                 throw new NullPointerException("aliases array contains null elements");
@@ -190,7 +190,7 @@ public class CommandInfo {
         public Builder setOptions(@NotNull OptionInfo... options) {
             Objects.requireNonNull(options, "options array is null");
             try {
-                this.options = Set.of(options);
+                this.options = OrderedSet.of(options);
             }
             catch (NullPointerException e) {
                 throw new NullPointerException("options array contains null elements");
