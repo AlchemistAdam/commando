@@ -80,6 +80,7 @@ public abstract class AbstractCliEngine extends Thread {
     @Override
     public void run() {
         CommandLine cmdl;
+        out().println("Commando ready for input...");
         while ((cmdl = getLine()) != null) {
             CommandInfo cmdInfo;
             synchronized (cmdMap) {
