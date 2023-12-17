@@ -15,7 +15,11 @@ public class ListCmd implements StaticCommand {
     @NotNull
     public static CommandInfo getInfo() {
         // TODO add optionInfo
-        return new CommandInfo(ListCmd.class, "list", "l");
+        return new CommandInfo.Builder()
+                .setCls(ListCmd.class)
+                .setAliases("list", "l")
+                .setArgsInfo(ArgsInfo.OPTIONAL)
+                .get();
     }
 
     @NotNull

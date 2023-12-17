@@ -12,7 +12,11 @@ public class HelpCmd implements StaticCommand {
     @NotNull
     public static CommandInfo getInfo() {
         // TODO add optionInfo
-        return new CommandInfo(HelpCmd.class, "help", "h");
+        return new CommandInfo.Builder()
+                .setCls(HelpCmd.class)
+                .setAliases("help", "h")
+                .setArgsInfo(ArgsInfo.OPTIONAL)
+                .get();
     }
 
     @NotNull
