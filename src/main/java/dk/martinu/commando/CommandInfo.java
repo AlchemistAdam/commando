@@ -16,14 +16,17 @@ public class CommandInfo {
     @Unmodifiable
     @NotNull
     public final Set<OptionInfo> options;
+    @NotNull
+    public final ArgsInfo argsInfo;
     private WeakReference<Command> ref = new WeakReference<>(null);
 
     public CommandInfo(@NotNull Class<? extends Command> cls, @NotNull String... aliases) {
-        this(cls, aliases, new OptionInfo[0]);
+        this(cls, aliases, new OptionInfo[0], ArgsInfo.NONE);
     }
 
+    // FIXME aliases starting/ending with whitespace can never be called
     public CommandInfo(@NotNull Class<? extends Command> cls, @NotNull String[] aliases,
-            @NotNull OptionInfo[] options) {
+            @NotNull OptionInfo[] options, @NotNull ArgsInfo argsInfo) {
         this.cls = Objects.requireNonNull(cls, "cls is null");
 
         Objects.requireNonNull(aliases, "aliases array is null");
@@ -55,13 +58,16 @@ public class CommandInfo {
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("duplicate option", e);
         }
+
+        this.argsInfo = Objects.requireNonNull(argsInfo, "argsInfo is null");
     }
 
     private CommandInfo(@NotNull Class<? extends Command> cls, @NotNull Set<String> aliases,
-            @NotNull Set<OptionInfo> options) {
+            @NotNull Set<OptionInfo> options, @NotNull ArgsInfo argsInfo) {
         this.cls = cls;
         this.aliases = aliases;
         this.options = options;
+        this.argsInfo = argsInfo;
     }
 
     @Contract(pure = true)
@@ -132,11 +138,12 @@ public class CommandInfo {
         private Set<String> aliases;
         @Unmodifiable
         private Set<OptionInfo> options = Set.of();
+        private ArgsInfo argsInfo = ArgsInfo.NONE;
 
         @Contract(value = "-> new", pure = true)
         @NotNull
         public CommandInfo get() {
-            return new CommandInfo(cls, aliases, options);
+            return new CommandInfo(cls, aliases, options, argsInfo);
         }
 
         @Contract(value = "_ -> this")
@@ -160,6 +167,14 @@ public class CommandInfo {
                     throw new IllegalArgumentException("alias is invalid {" + alias + "}");
                 }
             }
+            return this;
+        }
+
+        @Contract(value = "_ -> this")
+        @NotNull
+        public Builder setArgsInfo(@NotNull ArgsInfo argsInfo) {
+            Objects.requireNonNull(argsInfo, "argsInfo is null");
+            this.argsInfo = argsInfo;
             return this;
         }
 
