@@ -33,6 +33,15 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
+    @Contract(pure = true)
+    @Nullable
+    public CommandInfo getCommand(@NotNull String alias) {
+        Objects.requireNonNull(alias, "alias is null");
+        synchronized (cmdMap) {
+            return cmdMap.get(alias);
+        }
+    }
+
     @Unmodifiable
     @NotNull
     public List<CommandEntry> getCommandEntries() {
@@ -115,6 +124,7 @@ public abstract class AbstractCliEngine extends Thread {
     protected void initCmdMap() {
         addCommand(ListCmd.getInfo());
         addCommand(HelpCmd.getInfo());
+        addCommand(CommandCmd.getInfo());
         addCommand(ExitCmd.getInfo());
     }
 
