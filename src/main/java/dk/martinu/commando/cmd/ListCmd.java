@@ -34,7 +34,9 @@ public class ListCmd implements StaticCommand {
     public void execute(@NotNull AbstractCliEngine engine, @NotNull Parameters parameters) throws CommandException {
         List<CommandEntry> entries = engine.getCommandEntries();
         if (!parameters.args.isEmpty()) {
-            // TODO filter commands to start with params arg if present
+            entries = entries.stream()
+                    .filter(entry -> Util.wildcardMatch(parameters.args, entry.alias()))
+                    .toList();
         }
         StringJoiner joiner = new StringJoiner("\n");
         for (CommandEntry entry : entries) {
