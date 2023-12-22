@@ -72,6 +72,27 @@ public abstract class OrderedSet<E> implements Set<E> {
         return true;
     }
 
+    @Contract(value = "null -> false", pure = true)
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        else if (obj instanceof Set<?> set && size() == set.size()) {
+            Iterator<E> i1 = iterator();
+            Iterator<?> i2 = set.iterator();
+            while (i1.hasNext() && i2.hasNext()) {
+                if (!Objects.equals(i1.next(), i2.next())) {
+                    return false;
+                }
+            }
+            return !i1.hasNext() && !i2.hasNext();
+        }
+        else {
+            return false;
+        }
+    }
+
     @Contract(value = "_ -> fail")
     @Override
     public boolean remove(Object o) {
