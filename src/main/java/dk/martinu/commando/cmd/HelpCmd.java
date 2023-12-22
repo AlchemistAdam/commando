@@ -33,6 +33,16 @@ public class HelpCmd implements StaticCommand {
 
     @Override
     public void execute(@NotNull AbstractCliEngine engine, @NotNull Parameters parameters) throws CommandException {
-        // TODO show usage of command specified by parameter
+        if (parameters.args.isEmpty()) {
+            StringBuilder sb = new StringBuilder(128);
+            sb.append("Usage:\n\thelp\n\t(to view this information)\nor\n\thelp <command_name>\n\t(to view the help information for the specified command)");
+            if (engine.hasCommand(ListCmd.getInfo())) {
+                sb.append("\n\ntype \"list\" to view a list of all available commands");
+            }
+            engine.println(sb.toString());
+        }
+        else {
+            // TODO show usage of command specified by parameter
+        }
     }
 }
