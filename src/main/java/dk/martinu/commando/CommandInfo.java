@@ -70,6 +70,23 @@ public class CommandInfo {
         this.argsInfo = argsInfo;
     }
 
+    @Contract(value = "null -> false", pure = true)
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        else if (obj instanceof CommandInfo info) {
+            return cls.equals(info.cls)
+                    && aliases.equals(info.aliases)
+                    && options.equals(info.options)
+                    && argsInfo == info.argsInfo;
+        }
+        else {
+            return false;
+        }
+    }
+
     @Contract(pure = true)
     @NotNull
     public String getName() {
