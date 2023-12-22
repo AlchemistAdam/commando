@@ -60,6 +60,14 @@ public abstract class AbstractCliEngine extends Thread {
         }
     }
 
+    @Contract(pure = true)
+    public boolean hasCommand(@NotNull CommandInfo commandInfo) {
+        Objects.requireNonNull(commandInfo, "commandInfo is null");
+        synchronized (cmdMap) {
+            return cmdMap.containsValue(commandInfo);
+        }
+    }
+
     public void printf(@NotNull String format, Object... args) {
         PrintWriter out = out();
         synchronized (out) {
